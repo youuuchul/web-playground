@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>신유철 | Business Manager & AI Agent Builder</title>
+  <meta name="description" content="비즈니스 매니저이자 AI 에이전트 프로젝트를 만드는 신유철의 소개 페이지" />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --card2:#0f1730;
+      --text:#e8ecff;
+      --muted:#b7c0ffcc;
+      --line:#24305e;
+      --accent:#7c5cff;
+      --accent2:#2ee6a6;
+      --shadow: 0 14px 40px rgba(0,0,0,.35);
+      --radius: 18px;
+      --max: 1080px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", "Apple SD Gothic Neo", Arial, "Helvetica Neue", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(124,92,255,.35), transparent 55%),
+        radial-gradient(900px 500px at 90% 10%, rgba(46,230,166,.22), transparent 60%),
+        radial-gradient(900px 700px at 50% 120%, rgba(124,92,255,.18), transparent 55%),
+        var(--bg);
+      line-height:1.55;
+    }
+
+    a{color:inherit; text-decoration:none}
+    a:hover{opacity:.9}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 20px 60px}
+
+    /* top nav */
+    .nav{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, rgba(11,16,32,.82), rgba(11,16,32,.55));
+      border-bottom:1px solid rgba(36,48,94,.55);
+    }
+    .nav .inner{max-width:var(--max); margin:0 auto; padding:14px 20px; display:flex; gap:14px; align-items:center; justify-content:space-between}
+    .brand{display:flex; gap:10px; align-items:center}
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(46,230,166,1));
+      box-shadow: 0 10px 24px rgba(124,92,255,.25);
+    }
+    .brand strong{font-weight:800; letter-spacing:.2px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(36,48,94,.8);
+      background: rgba(18,26,51,.55);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .links{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .links a{
+      padding:8px 10px; border-radius:12px;
+      border:1px solid rgba(36,48,94,.7);
+      background: rgba(18,26,51,.45);
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* hero */
+    .hero{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 860px){
+      .hero{grid-template-columns:1fr}
+    }
+    .card{
+      border:1px solid rgba(36,48,94,.85);
+      background: linear-gradient(180deg, rgba(18,26,51,.72), rgba(15,23,48,.62));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .pad{padding:22px}
+    .kicker{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-bottom:12px;
+    }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(36,48,94,.85);
+      background: rgba(11,16,32,.25);
+      color:var(--muted);
+      font-size:12.5px;
+    }
+    .tag .dot{width:7px; height:7px; border-radius:50%; background:var(--accent2)}
+    h1{
+      margin:10px 0 10px;
+      font-size:44px;
+      line-height:1.1;
+      letter-spacing:-.8px;
+    }
+    @media (max-width: 520px){ h1{font-size:34px} }
+    .subtitle{
+      color:var(--muted);
+      font-size:16px;
+      max-width: 62ch;
+      margin:0 0 18px;
+    }
+    .cta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(36,48,94,.9);
+      background: rgba(18,26,51,.55);
+      color:var(--text);
+      font-weight:650;
+      font-size:14px;
+    }
+    .btn.primary{
+      border-color: rgba(124,92,255,.75);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(46,230,166,.72));
+      color:#091025;
+    }
+    .btn .mono{font-family:var(--mono); font-size:12px; opacity:.9}
+
+    /* side stats */
+    .stat{
+      display:grid; gap:12px;
+    }
+    .stat .box{
+      border:1px solid rgba(36,48,94,.85);
+      background: rgba(18,26,51,.45);
+      border-radius:16px;
+      padding:16px;
+    }
+    .stat .num{font-size:22px; font-weight:800; letter-spacing:-.4px}
+    .stat .lbl{color:var(--muted); font-size:13px; margin-top:2px}
+    .stat .bar{
+      height:10px; border-radius:999px;
+      background: rgba(36,48,94,.65);
+      margin-top:12px;
+      overflow:hidden;
+    }
+    .stat .bar > span{
+      display:block; height:100%;
+      width:72%;
+      background: linear-gradient(90deg, rgba(124,92,255,1), rgba(46,230,166,1));
+    }
+
+    /* sections */
+    section{margin-top:22px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:20px;
+      letter-spacing:-.2px;
+    }
+    .muted{color:var(--muted)}
+    .list{margin:0; padding-left:18px}
+    .list li{margin:6px 0}
+    .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(36,48,94,.85);
+      background: rgba(11,16,32,.25);
+      color:var(--muted);
+      font-size:12.5px;
+    }
+
+    /* project cards */
+    .projects{display:grid; grid-template-columns: 1fr 1fr 1fr; gap:14px}
+    @media (max-width: 1000px){ .projects{grid-template-columns: 1fr 1fr} }
+    @media (max-width: 700px){ .projects{grid-template-columns: 1fr} }
+
+    .p-card{
+      border:1px solid rgba(36,48,94,.85);
+      background: rgba(18,26,51,.45);
+      border-radius:16px;
+      overflow:hidden;
+      display:flex; flex-direction:column;
+      min-height: 170px;
+    }
+    .p-top{
+      padding:14px 14px 10px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(36,48,94,.55);
+      background: rgba(15,23,48,.25);
+    }
+    .p-title{font-weight:800}
+    .badge{
+      font-size:12px;
+      color:#091025;
+      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(46,230,166,1));
+      padding:6px 9px;
+      border-radius:999px;
+      font-weight:750;
+      white-space:nowrap;
+    }
+    .p-body{padding:12px 14px; color:var(--muted); font-size:13.5px}
+    .p-foot{
+      padding:12px 14px 14px;
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-top:auto;
+    }
+    .p-foot a{
+      font-size:12.5px;
+      color:var(--muted);
+      border:1px solid rgba(36,48,94,.8);
+      padding:7px 10px;
+      border-radius:12px;
+      background: rgba(11,16,32,.18);
+    }
+
+    /* timeline */
+    .timeline{display:grid; gap:10px; margin-top:10px}
+    .t-item{
+      border:1px solid rgba(36,48,94,.85);
+      background: rgba(18,26,51,.45);
+      border-radius:16px;
+      padding:14px;
+    }
+    .t-head{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .t-role{font-weight:800}
+    .t-date{color:var(--muted); font-size:12.5px; font-family:var(--mono)}
+    .t-desc{color:var(--muted); margin-top:8px; font-size:13.5px}
+    .t-desc ul{margin:8px 0 0; padding-left:18px}
+
+    /* footer */
+    footer{
+      margin-top:26px;
+      color:rgba(183,192,255,.7);
+      font-size:12.5px;
+      border-top:1px solid rgba(36,48,94,.55);
+      padding-top:18px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    .mono{font-family:var(--mono)}
+    .kbd{
+      font-family:var(--mono);
+      border:1px solid rgba(36,48,94,.75);
+      background: rgba(18,26,51,.35);
+      padding:2px 7px;
+      border-radius:8px;
+      font-size:12px;
+      color:rgba(232,236,255,.85);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>신유철</strong>
+          <div class="pill">Business Manager · AI Agent Project Builder</div>
+        </div>
+      </div>
+      <div class="links">
+        <a href="#about">소개</a>
+        <a href="#projects">프로젝트</a>
+        <a href="#skills">역량</a>
+        <a href="#contact">연락</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="card">
+        <div class="pad">
+          <div class="kicker">
+            <span class="tag"><span class="dot"></span> 지금 만드는 것: AI Agent + 데이터 기반 운영 자동화</span>
+            <span class="tag">관심사: 제품/운영 지표 · 실험 설계 · LLM 시스템</span>
+          </div>
+
+          <h1>안녕하세요, 신유철입니다.</h1>
+          <p class="subtitle">
+            저는 <b>비즈니스 매니저</b>로서 문제를 구조화하고, 데이터로 의사결정을 설계하며,
+            <b>AI 에이전트</b>로 반복 업무를 자동화하는 시스템을 만듭니다.
+            “그럴듯함”이 아니라 <b>근거·재현성·운영 가능성</b>을 기준으로 일합니다.
+          </p>
+
+          <div class="cta">
+            <a class="btn primary" href="#projects">AI 에이전트 프로젝트 보기</a>
+            <a class="btn" href="#contact">연락하기 <span class="mono">/ contact</span></a>
+            <a class="btn" href="#" onclick="navigator.clipboard?.writeText('you@example.com'); alert('이메일이 클립보드에 복사됐습니다 (예시)'); return false;">
+              이메일 복사 <span class="mono">you@example.com</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pad stat">
+          <div class="box">
+            <div class="num">Biz × Data × AI</div>
+            <div class="lbl">문제정의 → 가설 → 검증 → 실행/운영까지</div>
+            <div class="bar"><span aria-hidden="true"></span></div>
+          </div>
+          <div class="box">
+            <div class="num">Agentic Workflow</div>
+            <div class="lbl">RAG · Tool-Use · 평가/가드레일 · 로그/모니터링</div>
+          </div>
+          <div class="box">
+            <div class="num">현실적 실행력</div>
+            <div class="lbl">대시보드/지표 설계, 자동화, 커뮤니케이션</div>
+          </div>
+          <div class="box">
+            <div class="num mono">FLOPs & ROI 감각</div>
+            <div class="lbl">“비용 한계”를 전제로 설계</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT + FOCUS -->
+    <section id="about" class="grid">
+      <div class="card">
+        <div class="pad">
+          <h2>소개</h2>
+          <p class="muted">
+            저는 비즈니스 현장에서 발생하는 문제를 <b>데이터로 구조화</b>하고,
+            반복되는 의사결정/운영을 <b>AI 에이전트</b>로 자동화하는 데 관심이 있습니다.
+            특히 <b>근거 기반 답변(grounding)</b>, <b>평가/품질관리</b>, <b>운영 효율화</b>에 집중합니다.
+          </p>
+          <ul class="list muted">
+            <li>문제정의/가설수립/검증/결과-제안 흐름으로 프로젝트를 정리합니다.</li>
+            <li>SQL·대시보드·리포트로 “의사결정의 재현성”을 만들고자 합니다.</li>
+            <li>LLM은 “정답 생성기”가 아니라 “업무 시스템의 구성요소”로 다룹니다.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pad">
+          <h2>현재 집중하는 주제</h2>
+          <ul class="list muted">
+            <li><b>PEFT/LoRA</b>: 제한된 자원에서 도메인 적응</li>
+            <li><b>RAG</b>: 검색 품질(리트리벌) + 인용/근거 정합성</li>
+            <li><b>Inference-time scaling</b>: 더 똑똑하게 “생각”시키는 설계</li>
+            <li><b>평가</b>: 자동평가(rouge 등) + 휴먼 캘리브레이션 + LLM-judge</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">SQL (MySQL/BigQuery)</span>
+            <span class="chip">Python</span>
+            <span class="chip">Tableau / Redash</span>
+            <span class="chip">LLM Systems</span>
+            <span class="chip">Experiment Design</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="card">
+      <div class="pad">
+        <h2>AI 에이전트 프로젝트</h2>
+        <p class="muted">
+          아래는 예시 템플릿입니다. 실제 프로젝트명/링크/성과를 너 버전으로 교체하면 바로 포트폴리오가 됩니다.
+        </p>
+
+        <div class="projects" style="margin-top:14px">
+          <div class="p-card">
+            <div class="p-top">
+              <div class="p-title">Ops Insight Agent</div>
+              <span class="badge">RAG + Tool</span>
+            </div>
+            <div class="p-body">
+              운영 지표/로그를 질의하면, 근거 문서/SQL 결과를 바탕으로
+              “원인-대안-예상 임팩트”까지 생성하는 분석 에이전트.
+            </div>
+            <div class="p-foot">
+              <a href="#">Architecture</a>
+              <a href="#">Demo</a>
+              <a href="#">GitHub</a>
+            </div>
+          </div>
+
+          <div class="p-card">
+            <div class="p-top">
+              <div class="p-title">Doc QA Agent</div>
+              <span class="badge">Grounded</span>
+            </div>
+            <div class="p-body">
+              사내 문서를 임베딩/검색하고, 인용 구간을 강제 노출하며
+              “근거 없는 답변”을 억제하는 Q&A 시스템.
+            </div>
+            <div class="p-foot">
+              <a href="#">Retrieval Eval</a>
+              <a href="#">Prompt Guardrails</a>
+              <a href="#">Report</a>
+            </div>
+          </div>
+
+          <div class="p-card">
+            <div class="p-top">
+              <div class="p-title">Auto-Report Agent</div>
+              <span class="badge">Workflow</span>
+            </div>
+            <div class="p-body">
+              주간 리포트를 자동 생성: 지표 집계 → 변화 탐지 →
+              핵심 인사이트/액션 제안 → 대시보드 링크 포함.
+            </div>
+            <div class="p-foot">
+              <a href="#">Metrics Spec</a>
+              <a href="#">Scheduler</a>
+              <a href="#">Samples</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS + EXPERIENCE -->
+    <section class="grid">
+      <div id="skills" class="card">
+        <div class="pad">
+          <h2>핵심 역량</h2>
+          <ul class="list muted">
+            <li><b>비즈니스 문제 구조화</b>: KPI 설계, 가설/실험, 의사결정 프레임</li>
+            <li><b>데이터 분석</b>: SQL 기반 집계/정합성 검증, 지표 해석, 대시보드</li>
+            <li><b>AI 시스템</b>: RAG(리트리벌/청킹/임베딩), 툴 호출, 가드레일</li>
+            <li><b>평가/운영</b>: 자동 평가 + 휴먼 검증, 로그/모니터링, 품질 루프</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Problem Framing</span>
+            <span class="chip">SQL</span>
+            <span class="chip">A/B Test</span>
+            <span class="chip">RAG</span>
+            <span class="chip">PEFT/LoRA</span>
+            <span class="chip">Evaluation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="pad">
+          <h2>경험/타임라인 (예시)</h2>
+          <div class="timeline">
+            <div class="t-item">
+              <div class="t-head">
+                <div class="t-role">Business Manager · 데이터 기반 운영 개선</div>
+                <div class="t-date">YYYY.MM – YYYY.MM</div>
+              </div>
+              <div class="t-desc">
+                <ul>
+                  <li>지표 체계 정리 및 대시보드 구축</li>
+                  <li>병목 분석 → 실행 플랜 도출 → 운영 반영</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="t-item">
+              <div class="t-head">
+                <div class="t-role">AI Agent Project · 분석/자동화 시스템</div>
+                <div class="t-date">YYYY.MM – Present</div>
+              </div>
+              <div class="t-desc">
+                <ul>
+                  <li>RAG 파이프라인 설계(청킹/검색 품질 개선)</li>
+                  <li>근거 기반 답변 + 평가 루프(자동평가/샘플 검수)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <p class="muted" style="margin-top:12px">
+            <span class="kbd">TIP</span> 여기는 “성과 숫자” 넣으면 완성도 확 올라감.
+            (예: 리드타임 -15%, 생산성 +8%, 운영비 -x% 등)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="card">
+      <div class="pad">
+        <h2>연락</h2>
+        <p class="muted">
+          아래는 예시입니다. 이메일/링크만 바꾸면 됩니다.
+        </p>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; margin-top:12px">
+          <div class="card" style="box-shadow:none; background:rgba(18,26,51,.38)">
+            <div class="pad">
+              <div class="muted" style="font-size:13px">Email</div>
+              <div style="font-size:16px; font-weight:800; margin-top:4px">you@example.com</div>
+              <div class="muted" style="font-size:12.5px; margin-top:8px">
+                빠르게 확인할 수 있는 메일 주소로 교체하세요.
+              </div>
+            </div>
+          </div>
+          <div class="card" style="box-shadow:none; background:rgba(18,26,51,.38)">
+            <div class="pad">
+              <div class="muted" style="font-size:13px">Links</div>
+              <div class="chips" style="margin-top:10px">
+                <a class="chip" href="#">GitHub</a>
+                <a class="chip" href="#">LinkedIn</a>
+                <a class="chip" href="#">Notion</a>
+                <a class="chip" href="#">Resume (PDF)</a>
+              </div>
+              <div class="muted" style="font-size:12.5px; margin-top:8px">
+                포트폴리오/이력서 링크를 연결하면 끝.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span class="mono" id="y"></span> 신유철 · Built with simple HTML/CSS</div>
+      <div class="mono">Last updated: <span id="d"></span></div>
+    </footer>
+  </main>
+
+  <script>
+    // small helpers
+    const now = new Date();
+    document.getElementById("y").textContent = now.getFullYear();
+    document.getElementById("d").textContent = now.toISOString().slice(0,10);
+  </script>
+</body>
+</html>

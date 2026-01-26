@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibe Dice Roller</title>
+  <style>
+    :root{
+      --bg:#111827;
+      --card:#1f2937;
+      --primary:#8b5cf6;
+      --accent:#10b981;
+      --text:#f3f4f6;
+      --muted:#9ca3af;
+      --danger:#ff6b6b;
+      --line:#2b3550;
+      --dice:#f8f9fa;
+      --diceText:#222;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--bg); color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",Arial,sans-serif;
+      padding:18px;
+    }
+    .container{
+      width:100%; max-width:560px;
+      background:var(--card);
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 20px 25px -5px rgba(0,0,0,.45);
+      text-align:center;
+      border:1px solid rgba(255,255,255,.05);
+    }
+    h1{margin:0 0 16px; font-size:1.8rem}
+
+    .tabs{
+      display:flex; gap:10px; justify-content:center;
+      padding:6px;
+      background:#0f172a;
+      border-radius:14px;
+      margin: 0 0 18px;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .tab-btn{
+      flex:1;
+      border:none;
+      background:transparent;
+      color:var(--muted);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+      transition:all .2s;
+    }
+    .tab-btn.active{
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#081018;
+      box-shadow:0 6px 14px rgba(139,92,246,.25);
+    }
+
+    .mode{display:none; animation:fade .25s ease}
+    .mode.active{display:block}
+
+    @keyframes fade{
+      from{opacity:0; transform:translateY(6px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .dice-area{
+      min-height:130px;
+      display:flex; gap:16px; justify-content:center; align-items:center; flex-wrap:wrap;
+      margin: 10px 0 14px;
+    }
+
+    .die{
+      width:84px; height:84px;
+      background:var(--dice);
+      color:var(--diceText);
+      border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:2rem; font-weight:900;
+      box-shadow:0 6px 0 rgba(0,0,0,.25);
+      border:2px solid #111;
+      position:relative;
+      user-select:none;
+    }
+    .die small{
+      position:absolute; bottom:-20px;
+      font-size:12px; color:var(--muted);
+      font-weight:700;
+    }
+
+    .row{
+      display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap;
+      margin: 10px 0;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:12px;
+      color:white;
+      font-weight:900;
+      font-size:1.05rem;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      transition:transform .08s, opacity .15s;
+      min-width:180px;
+    }
+    .btn:active{transform:scale(.98)}
+    .btn:hover{opacity:.93}
+    .btn.secondary{
+      background:transparent;
+      border:1px solid rgba(255,255,255,.14);
+      color:var(--text);
+      min-width:auto;
+      font-weight:800;
+    }
+
+    .result{
+      min-height:28px;
+      margin-top:10px;
+      color:var(--muted);
+      font-size:1.05rem;
+    }
+    .result strong{color:var(--accent); font-size:1.2rem}
+    .judge{
+      margin-top:8px;
+      font-weight:900;
+      font-size:1.1rem;
+    }
+    .judge.winA{color:var(--accent)}
+    .judge.winB{color:var(--primary)}
+    .judge.tie{color:#fbbf24}
+
+    /* TRPG 선택 버튼 */
+    .trpg-grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+      margin: 10px auto 0;
+      max-width: 420px;
+    }
+    .trpg-btn{
+      padding:10px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#0f172a;
+      color:var(--text);
+      cursor:pointer;
+      font-weight:900;
+    }
+    .trpg-btn:hover{border-color: rgba(139,92,246,.6)}
+    .trpg-btn.active{
+      background:rgba(139,92,246,.18);
+      border-color: rgba(139,92,246,.75);
+    }
+    .hint{color:var(--muted); font-size:.95rem; margin-top:6px}
+
+    /* 흔들림 애니메이션 */
+    .shake{animation: shake .45s ease-in-out}
+    @keyframes shake{
+      0%{transform:rotate(0deg)}
+      20%{transform:rotate(6deg)}
+      40%{transform:rotate(-6deg)}
+      60%{transform:rotate(6deg)}
+      80%{transform:rotate(-6deg)}
+      100%{transform:rotate(0deg)}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🎲 Vibe Dice Roller</h1>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="basic1">기본 1개</button>
+      <button class="tab-btn" data-tab="basic2">기본 2개 비교</button>
+      <button class="tab-btn" data-tab="trpg">TRPG 선택</button>
+    </div>
+
+    <!-- 1) 기본 1개 -->
+    <section id="basic1" class="mode active">
+      <div class="dice-area">
+        <div id="b1-die" class="die">?<small>D6</small></div>
+      </div>
+      <button class="btn" id="b1-roll">ROLL (D6)</button>
+      <div class="result" id="b1-result">주사위를 굴려보세요!</div>
+    </section>
+
+    <!-- 2) 기본 2개 비교 -->
+    <section id="basic2" class="mode">
+      <div class="dice-area">
+        <div id="b2-a" class="die">?<small>D6 · A</small></div>
+        <div id="b2-b" class="die">?<small>D6 · B</small></div>
+      </div>
+      <button class="btn" id="b2-roll">ROLL 2개 (D6 vs D6)</button>
+      <div class="result" id="b2-result">두 값을 비교해줄게요.</div>
+      <div class="judge" id="b2-judge"></div>
+    </section>
+
+    <!-- 3) TRPG 선택 -->
+    <section id="trpg" class="mode">
+      <div class="row">
+        <span class="hint">주사위를 고른 뒤, “2개 굴려 비교”를 누르세요.</span>
+      </div>
+
+      <div class="trpg-grid" id="trpgGrid">
+        <button class="trpg-btn active" data-sides="4">D4</button>
+        <button class="trpg-btn" data-sides="6">D6</button>
+        <button class="trpg-btn" data-sides="8">D8</button>
+        <button class="trpg-btn" data-sides="10">D10</button>
+        <button class="trpg-btn" data-sides="12">D12</button>
+        <button class="trpg-btn" data-sides="20">D20</button>
+      </div>
+
+      <div class="dice-area">
+        <div id="t-a" class="die">?<small id="t-a-label">D4 · A</small></div>
+        <div id="t-b" class="die">?<small id="t-b-label">D4 · B</small></div>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="t-roll">2개 굴려 비교</button>
+        <button class="btn secondary" id="t-reset">리셋</button>
+      </div>
+
+      <div class="result" id="t-result">선택된 주사위: <strong id="t-picked">D4</strong></div>
+      <div class="judge" id="t-judge"></div>
+    </section>
+  </div>
+
+  <script>
+    // ---------- 공용 유틸 ----------
+    const rand = (max) => Math.floor(Math.random() * max) + 1;
+
+    function animateDice(el) {
+      el.classList.remove('shake');
+      // 리플로우로 애니메이션 리셋
+      void el.offsetWidth;
+      el.classList.add('shake');
+      el.textContent = '...';
+    }
+
+    function setDieValue(el, value, labelText) {
+      el.innerHTML = `${value}<small>${labelText}</small>`;
+    }
+
+    function judgeTwo(a, b) {
+      if (a > b) return { cls: 'winA', text: 'A가 더 큽니다 ✅' };
+      if (b > a) return { cls: 'winB', text: 'B가 더 큽니다 ✅' };
+      return { cls: 'tie', text: '무승부 🤝' };
+    }
+
+    // ---------- 탭 전환 ----------
+    const tabs = document.querySelectorAll('.tab-btn');
+    const modes = document.querySelectorAll('.mode');
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const id = btn.dataset.tab;
+        modes.forEach(m => m.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+      });
+    });
+
+    // ---------- 1) 기본 1개 ----------
+    const b1Die = document.getElementById('b1-die');
+    const b1Result = document.getElementById('b1-result');
+    document.getElementById('b1-roll').addEventListener('click', () => {
+      animateDice(b1Die);
+      b1Result.textContent = '굴리는 중...';
+      setTimeout(() => {
+        const v = rand(6);
+        setDieValue(b1Die, v, 'D6');
+        b1Result.innerHTML = `결과: <strong>${v}</strong>`;
+      }, 420);
+    });
+
+    // ---------- 2) 기본 2개 비교 ----------
+    const b2A = document.getElementById('b2-a');
+    const b2B = document.getElementById('b2-b');
+    const b2Result = document.getElementById('b2-result');
+    const b2Judge = document.getElementById('b2-judge');
+
+    document.getElementById('b2-roll').addEventListener('click', () => {
+      animateDice(b2A);
+      animateDice(b2B);
+      b2Result.textContent = '굴리는 중...';
+      b2Judge.textContent = '';
+      b2Judge.className = 'judge';
+
+      setTimeout(() => {
+        const a = rand(6);
+        const b = rand(6);
+        setDieValue(b2A, a, 'D6 · A');
+        setDieValue(b2B, b, 'D6 · B');
+
+        const j = judgeTwo(a, b);
+        b2Result.innerHTML = `A: <strong>${a}</strong> / B: <strong>${b}</strong>`;
+        b2Judge.textContent = j.text;
+        b2Judge.classList.add(j.cls);
+      }, 420);
+    });
+
+    // ---------- 3) TRPG 선택 + 2개 비교 ----------
+    let currentSides = 4;
+
+    const tA = document.getElementById('t-a');
+    const tB = document.getElementById('t-b');
+    const tPicked = document.getElementById('t-picked');
+    const tResult = document.getElementById('t-result');
+    const tJudge = document.getElementById('t-judge');
+
+    function updateTrpgLabels() {
+      document.getElementById('t-a-label').textContent = `D${currentSides} · A`;
+      document.getElementById('t-b-label').textContent = `D${currentSides} · B`;
+      tPicked.textContent = `D${currentSides}`;
+      // 초기 표시도 라벨 반영
+      setDieValue(tA, '?', `D${currentSides} · A`);
+      setDieValue(tB, '?', `D${currentSides} · B`);
+      tJudge.textContent = '';
+      tJudge.className = 'judge';
+      tResult.innerHTML = `선택된 주사위: <strong>D${currentSides}</strong>`;
+    }
+
+    // TRPG 버튼 선택
+    document.getElementById('trpgGrid').addEventListener('click', (e) => {
+      const btn = e.target.closest('.trpg-btn');
+      if (!btn) return;
+      document.querySelectorAll('.trpg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      currentSides = Number(btn.dataset.sides);
+      updateTrpgLabels();
+    });
+
+    // 굴리기
+    document.getElementById('t-roll').addEventListener('click', () => {
+      animateDice(tA);
+      animateDice(tB);
+      tResult.textContent = `D${currentSides} 굴리는 중...`;
+      tJudge.textContent = '';
+      tJudge.className = 'judge';
+
+      setTimeout(() => {
+        const a = rand(currentSides);
+        const b = rand(currentSides);
+        setDieValue(tA, a, `D${currentSides} · A`);
+        setDieValue(tB, b, `D${currentSides} · B`);
+
+        const j = judgeTwo(a, b);
+        tResult.innerHTML = `D${currentSides} 결과 — A: <strong>${a}</strong> / B: <strong>${b}</strong>`;
+        tJudge.textContent = j.text;
+        tJudge.classList.add(j.cls);
+
+        // (옵션) 크리티컬 연출: 최대값이면 테두리 강조
+        const highlight = (el, val) => {
+          if (val === currentSides) {
+            el.style.borderColor = 'var(--danger)';
+            el.style.color = 'var(--danger)';
+          } else {
+            el.style.borderColor = '#111';
+            el.style.color = 'var(--diceText)';
+          }
+        };
+        highlight(tA, a);
+        highlight(tB, b);
+      }, 420);
+    });
+
+    // 리셋
+    document.getElementById('t-reset').addEventListener('click', () => {
+      // 선택은 유지하고 값만 초기화
+      updateTrpgLabels();
+      tA.style.borderColor = '#111'; tA.style.color = 'var(--diceText)';
+      tB.style.borderColor = '#111'; tB.style.color = 'var(--diceText)';
+    });
+
+    // 최초 라벨 세팅
+    updateTrpgLabels();
+  </script>
+</body>
+</html>

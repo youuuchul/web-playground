@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또번호 추첨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎰 로또번호 추첨</h1>
+            <p class="subtitle">당신의 행운의 번호를 뽑아보세요!</p>
+        </header>
+
+        <div class="lottery-box">
+            <div class="numbers-display">
+                <div class="numbers-container" id="numbersContainer">
+                    <!-- 로또 번호가 여기에 표시됩니다 -->
+                </div>
+                <div class="bonus-number" id="bonusNumber"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="drawBtn" class="draw-btn">🎲 번호 추첨하기</button>
+                <button id="resetBtn" class="reset-btn">초기화</button>
+            </div>
+
+            <div class="info-box">
+                <p><strong>로또 규칙:</strong> 1~45 중 6개 번호 + 보너스 1개</p>
+                <p id="resultMessage" class="result-message"></p>
+            </div>
+        </div>
+
+        <footer>
+            <p>행운을 빕니다! 🍀</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

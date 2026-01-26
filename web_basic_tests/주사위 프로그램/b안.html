@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Dice Roller</title>
+    <style>
+        :root {
+            --bg: #111827;
+            --card: #1f2937;
+            --primary: #8b5cf6; /* 보라색 */
+            --accent: #10b981;  /* 초록색 */
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        h1 { margin-top: 0; font-size: 1.8rem; margin-bottom: 1.5rem; }
+
+        /* 탭 메뉴 (주사위 모드 선택) */
+        .tabs {
+            display: flex;
+            background: #111827;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        /* 주사위가 표시되는 영역 */
+        .dice-area {
+            min-height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 2rem;
+            perspective: 1000px; /* 3D 효과 */
+        }
+
+        /* 주사위 디자인 */
+        .die {
+            width: 60px;
+            height: 60px;
+            background: white;
+            color: #111;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* TRPG 주사위별 색상 구분 (CSS 변수 활용) */
+        .die.d4 { background: #ff7675; color: white; border-radius: 8px 8px 50% 50%; } /* 삼각형 느낌 */
+        .die.d6 { background: #fff; }
+        .die.d8 { background: #74b9ff; }
+        .die.d10 { background: #55efc4; }
+        .die.d12 { background: #a29bfe; color: white;}
+        .die.d20 { background: #fdcb6e; width: 70px; height: 70px; border-radius: 50%; border: 3px solid #e17055; font-size: 1.8rem;}
+
+        /* 주사위 아래 라벨 (D20, D6 등) */
+        .die span {
+            position: absolute;
+            bottom: -20px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* 굴리기 버튼 */
+        .roll-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .roll-btn:active { transform: scale(0.98); }
+        .roll-btn:hover { opacity: 0.9; }
+
+        /* 결과 텍스트 */
+        .result-text {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            min-height: 24px;
+        }
+        .result-text strong { color: var(--accent); font-size: 1.3rem; }
+
+        /* 애니메이션 (흔들림) */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            100% { transform: translate(0, 0) rotate(0); }
+        }
+        
+        .shaking {
+            animation: shake 0.4s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🎲 Random Dice Roller</h1>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="setMode('basic')">기본 1개</button>
+            <button class="tab-btn" onclick="setMode('double')">기본 2개</button>
+            <button class="tab-btn" onclick="setMode('trpg')">TRPG 세트</button>
+        </div>
+
+        <div class="dice-area" id="diceArea">
+            <div class="die d6">?<span>D6</span></div>
+        </div>
+
+        <div class="result-text" id="resultText">주사위를 굴려보세요!</div>
+
+        <button class="roll-btn" onclick="rollDice()">ROLL !</button>
+    </div>
+
+    <script>
+        // 현재 선택된 모드 (기본값: basic)
+        let currentMode = 'basic';
+
+        // 모드 변경 함수
+        function setMode(mode) {
+            currentMode = mode;
+            
+            // 탭 버튼 스타일 업데이트
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // 화면 초기화
+            const diceArea = document.getElementById('diceArea');
+            const resultText = document.getElementById('resultText');
+            resultText.innerHTML = "준비 완료!";
+            
+            // 모드별 초기 아이콘 세팅 (굴리기 전 모습)
+            if(mode === 'basic') {
+                diceArea.innerHTML = '<div class="die d6">?<span>D6</span></div>';
+            } else if(mode === 'double') {
+                diceArea.innerHTML = `
+                    <div class="die d6">?<span>D6</span></div>
+                    <div class="die d6">?<span>D6</span></div>`;
+            } else if(mode === 'trpg') {
+                diceArea.innerHTML = `
+                    <div class="die d4">?<span>D4</span></div>
+                    <div class="die d6">?<span>D6</span></div>
+                    <div class="die d8">?<span>D8</span></div>
+                    <div class="die d10">?<span>D10</span></div>
+                    <div class="die d12">?<span>D12</span></div>
+                    <div class="die d20">?<span>D20</span></div>`;
+            }
+        }
+
+        // 랜덤 숫자 생성 함수 (1 ~ max)
+        function getRandom(max) {
+            return Math.floor(Math.random() * max) + 1;
+        }
+
+        // 주사위 굴리기 메인 함수
+        function rollDice() {
+            const diceArea = document.getElementById('diceArea');
+            const resultText = document.getElementById('resultText');
+            
+            // 애니메이션 효과 추가 (클래스 뺐다가 다시 넣기)
+            diceArea.classList.remove('shaking');
+            void diceArea.offsetWidth; // 브라우저 리플로우 강제 (애니메이션 리셋용)
+            diceArea.classList.add('shaking');
+
+            let total = 0;
+            let html = '';
+
+            // 0.4초 뒤에 결과 보여주기 (애니메이션 시간 고려)
+            setTimeout(() => {
+                if (currentMode === 'basic') {
+                    // 기본 주사위 1개
+                    const val = getRandom(6);
+                    html = `<div class="die d6">${val}<span>D6</span></div>`;
+                    total = val;
+                    resultText.innerHTML = `결과: <strong>${total}</strong>`;
+
+                } else if (currentMode === 'double') {
+                    // 주사위 2개
+                    const v1 = getRandom(6);
+                    const v2 = getRandom(6);
+                    html = `
+                        <div class="die d6">${v1}<span>D6</span></div>
+                        <div class="die d6">${v2}<span>D6</span></div>`;
+                    total = v1 + v2;
+                    
+                    // 더블(같은 숫자)일 경우 이벤트
+                    let msg = `합계: <strong>${total}</strong>`;
+                    if(v1 === v2) msg += " <span style='color:#facc15'>(Double!)</span>";
+                    resultText.innerHTML = msg;
+
+                } else if (currentMode === 'trpg') {
+                    // TRPG 6종 세트 (D4, D6, D8, D10, D12, D20)
+                    const diceTypes = [4, 6, 8, 10, 12, 20];
+                    let details = [];
+                    
+                    diceTypes.forEach(max => {
+                        const val = getRandom(max);
+                        total += val;
+                        // D20은 강조 (크리티컬 체크)
+                        let extraClass = '';
+                        if(max === 20 && val === 20) extraClass = 'style="border-color:#ffff00; color:#d63031"';
+                        
+                        html += `<div class="die d${max}" ${extraClass}>${val}<span>D${max}</span></div>`;
+                    });
+                    
+                    resultText.innerHTML = `총합: <strong>${total}</strong>`;
+                }
+
+                // 화면에 HTML 뿌리기
+                diceArea.innerHTML = html;
+
+            }, 400); // 0.4초 딜레이
+        }
+    </script>
+</body>
+</html>
