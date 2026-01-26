@@ -1,8 +1,8 @@
 # Web Playground
 
-This is a repository for testing various web technologies and deploying them with services like Cloudflare.
+이 저장소는 다양한 웹 기술을 테스트하고 Cloudflare와 같은 서비스로 배포하기 위한 공간입니다.
 
-## Structure
+## 구조
 
-- `/web_basic_tests`: For small, lightweight tests.
-- Other directories: For more complex projects, each in its own folder.
+- `/web_basic_tests`: 작고 가벼운 테스트를 위한 폴더입니다.
+- 기타 디렉토리: 더 복잡한 프로젝트를 위한 폴더이며, 각 프로젝트는 자체 폴더에 있습니다.
