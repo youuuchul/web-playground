@@ -1,0 +1,233 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+.lottery-box {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.numbers-display {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.numbers-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    min-height: 70px;
+    align-items: center;
+}
+
+.number-ball {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    animation: popIn 0.4s ease-out;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.bonus-number {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.bonus-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.bonus-ball {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+    animation: popIn 0.4s ease-out 0.6s both;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.draw-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    flex: 1;
+    max-width: 350px;
+}
+
+.draw-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.draw-btn:active:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.draw-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.reset-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 15px 30px;
+}
+
+.reset-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+}
+
+.reset-btn:active {
+    transform: translateY(-1px);
+}
+
+.info-box {
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    border-left: 4px solid #667eea;
+}
+
+.info-box p {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.info-box strong {
+    color: #667eea;
+}
+
+.result-message {
+    display: none;
+    color: #764ba2;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f0e6ff;
+    border-radius: 10px;
+}
+
+footer {
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .lottery-box {
+        padding: 25px;
+    }
+
+    .number-ball {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .draw-btn {
+        max-width: 100%;
+    }
+}
